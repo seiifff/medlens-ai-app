@@ -8,9 +8,9 @@
     pkgs.nodejs_20
     pkgs.zulu
   ];
-  # Sets environment variables in the workspace
+  # Sets environment variable in the workspace
   env = {};
-  
+
   services.firebase.emulators = {
     detect = true;
     projectId = "demo-app";
