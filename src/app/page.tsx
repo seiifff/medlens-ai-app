@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { explainPrescription } from '@/ai/flows/explain-prescription';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileUp, Loader2, Pill, Sparkles } from 'lucide-react';
+import { FileUp, Loader2, Pill, Sparkles, X } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Home() {
@@ -16,6 +16,7 @@ export default function Home() {
   const [explanation, setExplanation] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -28,6 +29,15 @@ export default function Home() {
         setExplanation(null);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setImageData(null);
+    setExplanation(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -83,6 +93,7 @@ export default function Home() {
                   accept="image/*"
                   onChange={handleImageChange}
                   disabled={isLoading}
+                  ref={fileInputRef}
                 />
                 <label
                   htmlFor="prescription-upload"
@@ -104,6 +115,20 @@ export default function Home() {
                     </div>
                   )}
                 </label>
+                {imagePreview && !isLoading && (
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2 rounded-full h-8 w-8 z-10"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleRemoveImage();
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                    <span className="sr-only">Remove image</span>
+                  </Button>
+                )}
               </div>
 
               <Button
