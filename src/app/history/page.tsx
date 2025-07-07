@@ -1,8 +1,29 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Header } from '@/components/header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clock } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Clock, Pill } from 'lucide-react';
+
+type HistoryItem = {
+  id: string;
+  image: string;
+  explanation: string;
+  date: string;
+};
 
 export default function HistoryPage() {
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+
+  useEffect(() => {
+    const storedHistory = localStorage.getItem('medlens-history');
+    if (storedHistory) {
+      setHistory(JSON.parse(storedHistory));
+    }
+  }, []);
+
   return (
     <>
       <Header />
@@ -16,19 +37,61 @@ export default function HistoryPage() {
               Review your previously analyzed prescriptions.
             </p>
           </div>
-          <Card className="bg-card/50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <Clock className="h-6 w-6 text-primary" />
-                No History Yet
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                When you analyze a prescription on the Home page, it will show up here. For now, this is just a placeholder.
-              </p>
-            </CardContent>
-          </Card>
+
+          {history.length === 0 ? (
+            <Card className="bg-card/50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3">
+                  <Clock className="h-6 w-6 text-primary" />
+                  No History Yet
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  When you analyze a prescription on the Home page, it will show up here.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-6">
+              {history.map((item) => (
+                <Card key={item.id} className="bg-card/50 overflow-hidden animate-in fade-in-50">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-xl">Prescription Scan</CardTitle>
+                        <CardDescription>{item.date}</CardDescription>
+                      </div>
+                      <Image
+                        src={item.image}
+                        alt="Prescription thumbnail"
+                        width={80}
+                        height={80}
+                        className="rounded-lg object-cover shadow-md ml-4"
+                      />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value={item.id}>
+                        <AccordionTrigger>
+                          <div className="flex items-center gap-2">
+                            <Pill className="h-5 w-5 text-primary"/>
+                            View AI Explanation
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <p className="text-base whitespace-pre-wrap leading-relaxed text-muted-foreground">
+                            {item.explanation}
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </>

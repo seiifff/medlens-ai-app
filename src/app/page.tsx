@@ -57,6 +57,18 @@ export default function Home() {
     try {
       const result = await explainPrescription({ photoDataUri: imageData });
       setExplanation(result.explanation);
+
+      // Save to history
+      const newHistoryItem = {
+        id: new Date().toISOString(),
+        image: imageData,
+        explanation: result.explanation,
+        date: new Date().toLocaleString(),
+      };
+      const existingHistory = JSON.parse(localStorage.getItem('medlens-history') || '[]');
+      const updatedHistory = [newHistoryItem, ...existingHistory];
+      localStorage.setItem('medlens-history', JSON.stringify(updatedHistory));
+
     } catch (error) {
       console.error(error);
       toast({
@@ -109,7 +121,7 @@ export default function Home() {
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg text-muted-foreground hover:bg-muted/50 transition-colors">
-                      <FileUp className="h-12 w-12 mb-4 text-primary" />
+                      <FileUp className="h-12 w-12 text-primary" />
                       <span className="font-semibold">Click to upload or drag & drop</span>
                       <span className="text-sm">PNG, JPG, or WEBP</span>
                     </div>
