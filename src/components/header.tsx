@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Home, History, Settings, ScanSearch } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -7,11 +8,12 @@ import { cn } from '@/lib/utils';
 
 export function Header() {
   const isMobile = useIsMobile();
+  const pathname = usePathname();
 
   const navLinks = [
     { href: '/', label: 'Home', icon: Home, disabled: false },
-    { href: '#', label: 'History', icon: History, disabled: true },
-    { href: '#', label: 'Settings', icon: Settings, disabled: true },
+    { href: '/history', label: 'History', icon: History, disabled: false },
+    { href: '/settings', label: 'Settings', icon: Settings, disabled: false },
   ];
 
   const desktopNav = (
@@ -21,7 +23,7 @@ export function Header() {
         <span className="text-lg">MedLens</span>
       </Link>
       {navLinks.map((link) => (
-        <Button key={link.label} variant="link" asChild disabled={link.disabled} className={cn(link.disabled ? 'text-muted-foreground/50' : 'text-muted-foreground')}>
+        <Button key={link.label} variant="link" asChild disabled={link.disabled} className={cn(link.disabled ? 'text-muted-foreground/50' : 'text-muted-foreground', pathname === link.href && 'text-primary')}>
           <Link href={link.href} className="transition-colors hover:text-foreground">
             {link.label}
           </Link>
@@ -31,20 +33,20 @@ export function Header() {
   );
   
   const mobileBottomNav = (
-      <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-card border-t md:hidden">
+      <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-card/95 backdrop-blur-sm border-t md:hidden">
         <div className="grid h-full max-w-lg grid-cols-3 mx-auto font-medium">
           {navLinks.map((link) => (
             <Link
               key={link.label}
               href={link.href}
               className={cn(
-                "inline-flex flex-col items-center justify-center px-5 hover:bg-muted",
-                link.href === '/' ? 'text-primary' : 'text-muted-foreground',
+                "inline-flex flex-col items-center justify-center px-5 hover:bg-muted group",
+                pathname === link.href ? 'text-primary' : 'text-muted-foreground',
                 link.disabled && "text-muted-foreground/50 cursor-not-allowed pointer-events-none"
               )}
             >
-              <link.icon className="w-5 h-5 mb-1" />
-              <span className="text-xs">{link.label}</span>
+              <link.icon className="w-5 h-5 mb-1 transition-colors group-hover:text-foreground" />
+              <span className="text-xs transition-colors group-hover:text-foreground">{link.label}</span>
             </Link>
           ))}
         </div>

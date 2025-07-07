@@ -75,7 +75,7 @@ export default function Home() {
       <main className="flex-1 pb-24 md:pb-8">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary via-purple-500 to-pink-500 text-transparent bg-clip-text">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
               MedLens
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -83,7 +83,7 @@ export default function Home() {
             </p>
           </div>
 
-          <Card className="w-full shadow-lg border-2 border-dashed border-primary/20 hover:border-primary/50 transition-colors duration-300">
+          <Card className="w-full shadow-lg border-2 border-dashed border-primary/20 hover:border-primary/50 transition-colors duration-300 bg-card/50">
             <CardContent className="p-8 flex flex-col items-center text-center">
               <div className="relative w-full max-w-md mb-6">
                 <input
@@ -109,7 +109,7 @@ export default function Home() {
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg text-muted-foreground hover:bg-muted/50 transition-colors">
-                      <FileUp className="h-12 w-12 mb-4" />
+                      <FileUp className="h-12 w-12 mb-4 text-primary" />
                       <span className="font-semibold">Click to upload or drag & drop</span>
                       <span className="text-sm">PNG, JPG, or WEBP</span>
                     </div>
@@ -135,7 +135,7 @@ export default function Home() {
                 onClick={handleExplain}
                 disabled={!imagePreview || isLoading}
                 size="lg"
-                className="rounded-full font-bold text-base px-8 py-6 shadow-lg transform hover:scale-105 transition-transform"
+                className="rounded-full font-bold text-base px-8 py-6 shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground transform hover:scale-105 transition-transform"
               >
                 {isLoading ? (
                   <>
@@ -153,7 +153,7 @@ export default function Home() {
           </Card>
 
           {isLoading && (
-            <Card className="mt-8 w-full shadow-lg">
+            <Card className="mt-8 w-full shadow-lg bg-card/50">
               <CardHeader className="flex flex-row items-center gap-2">
                 <div className="p-2 bg-primary/20 rounded-full">
                   <Pill className="h-6 w-6 text-primary" />
@@ -161,15 +161,15 @@ export default function Home() {
                 <CardTitle>AI Explanation</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 p-6">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-full bg-muted/50" />
+                <Skeleton className="h-4 w-full bg-muted/50" />
+                <Skeleton className="h-4 w-3/4 bg-muted/50" />
               </CardContent>
             </Card>
           )}
 
           {explanation && (
-            <Card className="mt-8 w-full shadow-lg animate-in fade-in-50 slide-in-from-bottom-5 duration-500">
+            <Card className="mt-8 w-full shadow-lg animate-in fade-in-50 slide-in-from-bottom-5 duration-500 bg-card/80">
               <CardHeader className="flex flex-row items-center gap-3 bg-primary/10">
                 <div className="p-2 bg-primary/20 rounded-full">
                   <Pill className="h-6 w-6 text-primary" />
